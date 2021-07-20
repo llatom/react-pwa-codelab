@@ -145,14 +145,6 @@ module.exports = {
       template: "./public/index.html", // html模板路径
       hash: false, // 防止缓存，在引入的文件后面加hash (PWA就是要缓存，这里设置为false)
       inject: true, // 是否将js放在body的末尾
-      // 正式环境，把注册service-worker的代码加入到index.html中
-      registerServiceWorker: `<script>
-        if ("serviceWorker" in navigator) {
-          window.addEventListener("load", () => {
-            navigator.serviceWorker.register("./service-worker.js");
-          });
-        }
-      </script>`,
     }),
     /**
      * 拷贝public中的文件到最终打包文件夹里
@@ -204,16 +196,17 @@ module.exports = {
         },
       },
     }),
-
-    /**
-     * PWA - 自动生成server-worker.js
-     * https://developers.google.com/web/tools/workbox/reference-docs/latest/module-workbox-webpack-plugin.GenerateSW?hl=en
-     *  */
-    new WorkboxPlugin.GenerateSW({
-      skipWaiting: true, // service-worker如果有更新的话，跳过等待直接更新
+    new WorkboxPlugin.InjectManifest({
+      swSrc: path.resolve(__dirname, 'src/service-worker.js'),
+      swDest: path.resolve(__dirname, 'build/service-worker.js'),
+      dontCacheBustURLsMatching: /\.[0-9a-f]{8}\./,
+      exclude: [/\.map$/, /asset-manifest\.json$/, /LICENSE/],
+      // Bump up the default maximum size (2mb) that's precached,
+      // to make lazy-loading failure scenarios less likely.
+      // See https://github.com/cra-template/pwa/issues/13#issuecomment-722667270
+      maximumFileSizeToCacheInBytes: 5 * 1024 * 1024,
     }),
 
-    // new BundleAnalyzerPlugin(),
   ],
   resolve: {
     extensions: [".js", ".jsx", ".less", ".css", ".wasm"], // 后缀名自动补全

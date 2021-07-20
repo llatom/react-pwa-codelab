@@ -39,6 +39,10 @@ const Features = Loadable({
   loader: () => import(/* webpackChunkName:'features' */ "../features"),
   loading: Loading,
 });
+const List = Loadable({
+  loader: () => import(/* webpackChunkName:'list' */ "../list"),
+  loading: Loading,
+});
 const NotFound = Loadable({
   loader: () => import(/* webpackChunkName:'notfound' */ "../notfound"),
   loading: Loading,
@@ -85,6 +89,10 @@ function RootRouterContainer(props) {
                     <Route
                       path="/features"
                       render={(props) => onEnter(Features, props)}
+                    />
+                    <Route
+                      path="/list"
+                      render={(props) => onEnter(List, props)}
                     />
                     <Route
                       path="/test"
