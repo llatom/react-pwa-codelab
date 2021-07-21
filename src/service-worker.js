@@ -36,7 +36,7 @@ precacheAndRoute(self.__WB_MANIFEST || []);
 // This assumes /index.html has been precached.
 const navHandler = createHandlerBoundToURL("/index.html");
 const navigationRoute = new NavigationRoute(navHandler, {
-  denylist: [new RegExp("/out-of-spa/")], // Also might be specified explicitly via allowlist
+  denylist: [new RegExp("/posts/")], // Also might be specified explicitly via allowlist
 });
 registerRoute(navigationRoute);
 
@@ -44,7 +44,7 @@ registerRoute(navigationRoute);
 registerRoute(
   new RegExp("https://progwebnews-app.azurewebsites.net.*content/posts/slug.*"),
   new StaleWhileRevalidate({
-    cacheName: "wb6-post",
+    cacheName: "hz:fetch",
     plugins: [
       new ExpirationPlugin({
         // Only cache requests for a week
