@@ -43,6 +43,14 @@ const List = Loadable({
   loader: () => import(/* webpackChunkName:'list' */ "../list"),
   loading: Loading,
 });
+const Posts = Loadable({
+  loader: () => import(/* webpackChunkName:'posts' */ "../posts"),
+  loading: Loading,
+});
+const Presentation = Loadable({
+  loader: () => import(/* webpackChunkName:'presentation' */ "../presentation"),
+  loading: Loading,
+});
 const NotFound = Loadable({
   loader: () => import(/* webpackChunkName:'notfound' */ "../notfound"),
   loading: Loading,
@@ -80,6 +88,20 @@ function RootRouterContainer(props) {
             render={() => {
               return (
                 <div className="boss">
+                  <button id="app-update" class="app-update">
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      width="24"
+                      height="24"
+                      viewBox="0 0 24 24"
+                      fill="white"
+                    >
+                      <path fill="none" d="M0 0h24v24H0V0z" />
+                      <path
+                        d="M4 12l1.41 1.41L11 7.83V20h2V7.83l5.58 5.59L20 12l-8-8-8 8z"
+                      />
+                    </svg>
+                  </button>
                   <Switch>
                     <Redirect exact from="/" to="/home" />
                     <Route
@@ -95,8 +117,16 @@ function RootRouterContainer(props) {
                       render={(props) => onEnter(List, props)}
                     />
                     <Route
+                      path="/posts"
+                      render={(props) => onEnter(Posts, props)}
+                    />
+                    <Route
                       path="/test"
                       render={(props) => onEnter(Test, props)}
+                    />
+                    <Route
+                      path="/presentation"
+                      render={(props) => onEnter(Presentation, props)}
                     />
                     <Route
                       path="/testclass"
@@ -104,13 +134,11 @@ function RootRouterContainer(props) {
                     />
                     <Route component={NotFound} />
                   </Switch>
-                  <Menu />
                 </div>
               );
             }}
           />
         </Router>
-        <Footer />
       </>
     </ConfigProvider>
   );
