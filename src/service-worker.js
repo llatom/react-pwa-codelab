@@ -8,9 +8,6 @@ import {
 } from "workbox-strategies";
 import { ExpirationPlugin } from "workbox-expiration";
 import { CacheableResponsePlugin } from "workbox-cacheable-response";
-import { imageCache } from "workbox-recipes";
-import { BackgroundSyncPlugin } from "workbox-background-sync";
-import { BroadcastUpdatePlugin } from "workbox-broadcast-update";
 
 
 // 设置缓存名称
@@ -22,44 +19,39 @@ setCacheNameDetails({
 });
 
 // 更新时自动生效
-//self.skipWaiting();
 addEventListener("message", event => {
   if (event.data && event.data.type === "SKIP_WAITING") {
     self.skipWaiting();
   }
 });
+
+//要求控制尽快启动运行时缓存
 clientsClaim();
 
 // 预缓存文件，self.__WB_MANIFEST是workbox生成的文件地址数组，项目中打包生成的所有静态文件都会自动添加到里面
 precacheAndRoute(self.__WB_MANIFEST || []);
 
-// This assumes /index.html has been precached.
+// 设定/index.html precached
 const navHandler = createHandlerBoundToURL("/index.html");
 const navigationRoute = new NavigationRoute(navHandler, {
   denylist: [new RegExp("/posts/")], // Also might be specified explicitly via allowlist
 });
 registerRoute(navigationRoute);
 
-// Load details immediately and check for update right after
 registerRoute(
-  new RegExp("https://progwebnews-app.azurewebsites.net.*content/posts/slug.*"),
-  new StaleWhileRevalidate({
-    cacheName: "hz:fetch",
+  new RegExp('https://progwebnews-app\.azurewebsites\.net/ghost/api/.*'),
+  new NetworkFirst({
+    cacheName: 'hz:fetchdata',
     plugins: [
-      new ExpirationPlugin({
-        // Only cache requests for a week
-        maxAgeSeconds: 7 * 24 * 60 * 60,
+      new CacheableResponsePlugin({
+        statuses: [0, 200]
       }),
-      new BroadcastUpdatePlugin(),
+      new ExpirationPlugin({
+        maxEntries: 50,
+      })
     ],
   })
-);
-
-// Keeping lists always fresh
-registerRoute(
-  new RegExp("https://progwebnews-app.azurewebsites.net.*content/posts.*"),
-  new NetworkFirst()
-);
+)
 
 // 本地静态资源
 registerRoute(
@@ -81,7 +73,7 @@ registerRoute(
 // CDN图片缓存
 registerRoute(
   new RegExp('^https://static\.ghost\.org/'),
-  new CacheFirst({
+  new StaleWhileRevalidate({
     cacheName: 'hz:cdnimage',
     plugins: [
       new CacheableResponsePlugin({
@@ -91,11 +83,14 @@ registerRoute(
         maxEntries: 300,
         maxAgeSeconds: 7 * 24 * 60 * 60,
       })
-    ]
+    ],
+    // 添加如下fetch options
+    fetchOptions: {
+      mode: 'cors',
+      credentials: 'omit',
+    },
   }),
 )
-
-imageCache({ cacheName: "hz:images", maxEntries: 10 });
 
 // html的缓存策略
 registerRoute(

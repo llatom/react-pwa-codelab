@@ -7,7 +7,6 @@ import { Workbox } from "workbox-window";
 import "./styles/css.css";
 import "./styles/less.less";
 
-
 if ("serviceWorker" in navigator) {
   window.addEventListener("load", () => {
     const wb = new Workbox("/service-worker.js");
@@ -23,10 +22,10 @@ if ("serviceWorker" in navigator) {
         wb.messageSW({ type: "SKIP_WAITING" });
       });
     });
-
     wb.register();
   });
 }
+
 ReactDOM.render(<Root></Root>, document.getElementById("app-root"));
 
 if (module.hot) {
