@@ -38,21 +38,6 @@ const navigationRoute = new NavigationRoute(navHandler, {
 });
 registerRoute(navigationRoute);
 
-registerRoute(
-  new RegExp('https://progwebnews-app\.azurewebsites\.net/ghost/api/.*'),
-  new NetworkFirst({
-    cacheName: 'hz:fetchdata',
-    plugins: [
-      new CacheableResponsePlugin({
-        statuses: [0, 200]
-      }),
-      new ExpirationPlugin({
-        maxEntries: 50,
-      })
-    ],
-  })
-)
-
 // 本地静态资源
 registerRoute(
   new RegExp('/assets/'),

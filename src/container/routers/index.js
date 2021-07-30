@@ -47,10 +47,6 @@ const Posts = Loadable({
   loader: () => import(/* webpackChunkName:'posts' */ "../posts"),
   loading: Loading,
 });
-const Presentation = Loadable({
-  loader: () => import(/* webpackChunkName:'presentation' */ "../presentation"),
-  loading: Loading,
-});
 const NotFound = Loadable({
   loader: () => import(/* webpackChunkName:'notfound' */ "../notfound"),
   loading: Loading,
@@ -88,7 +84,7 @@ function RootRouterContainer(props) {
             render={() => {
               return (
                 <div className="boss">
-                  <button id="app-update" class="app-update">
+                  <button id="app-update" className="app-update">
                     <svg
                       xmlns="http://www.w3.org/2000/svg"
                       width="24"
@@ -123,10 +119,6 @@ function RootRouterContainer(props) {
                     <Route
                       path="/test"
                       render={(props) => onEnter(Test, props)}
-                    />
-                    <Route
-                      path="/presentation"
-                      render={(props) => onEnter(Presentation, props)}
                     />
                     <Route
                       path="/testclass"
