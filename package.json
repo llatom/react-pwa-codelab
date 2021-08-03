@@ -10,7 +10,8 @@
     "distmac": "export NODE_ENV=production&& node server.js",
     "prettier": "prettier --write \"{src,mock}/**/*.{js,css,less}\"",
     "cover": "./node_modules/.bin/istanbul cover _mocha",
-    "coveralls": "npm run cover -- --report lcovonly && cat ./coverage/lcov.info | ./node_modules/.bin/coveralls"
+    "coveralls": "npm run cover -- --report lcovonly && cat ./coverage/lcov.info | ./node_modules/.bin/coveralls",
+    "changelog": "conventional-changelog -p angular -i CHANGELOG.md -s -r 0 && git add CHANGELOG.md"
   },
   "author": "derek",
   "license": "ISC",
@@ -58,6 +59,7 @@
     "copy-webpack-plugin": "^9.0.0",
     "css-loader": "^5.2.6",
     "css-minimizer-webpack-plugin": "^3.0.1",
+    "cz-conventional-changelog": "^3.3.0",
     "dayjs": "^1.10.5",
     "eslint": "^7.28.0",
     "eslint-loader": "^4.0.2",
@@ -96,5 +98,10 @@
     "> 2%",
     "not dead",
     "not op_mini all"
-  ]
+  ],
+  "config": {
+    "commitizen": {
+      "path": "./node_modules/cz-conventional-changelog"
+    }
+  }
 }
